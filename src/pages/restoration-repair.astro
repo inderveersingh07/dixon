@@ -1,0 +1,146 @@
+---
+import ServicePage from "../layouts/ServicePage.astro";
+import BeforeAfter from "../components/BeforeAfter.astro";
+import Gallery from "../components/Gallery.astro";
+import { category } from "../lib/photos";
+
+const faq = [
+  {
+    q: "What is tuckpointing and do I need it?",
+    a: "It is cutting out failed mortar joints to a consistent depth and filling them with fresh mortar. You need it when the mortar is softer than the brick, when you can rake it out with a key, or when joints have opened enough to let water in. You do not need it because someone knocked on your door and said you did.",
+  },
+  {
+    q: "Why is my brick cracking in a stair step pattern?",
+    a: "Stepped cracking through the joints usually means something underneath has moved, most often a footing settling or water washing material out from below. The brickwork is the symptom. Repointing the crack without dealing with the movement means it comes back, so the first job is working out what moved.",
+  },
+  {
+    q: "Can you match old mortar and brick?",
+    a: "Mortar, usually yes, and it matters more than people expect. Modern hard mortar on soft historic brick will destroy the brick, because the joint is supposed to be the sacrificial part. Brick matching depends on what is still made. Sometimes the answer is reclaimed brick from elsewhere on the same building.",
+  },
+  {
+    q: "Is it repair or replacement?",
+    a: "Brent will tell you straight, including when the honest answer is that a repair will not last and you would be throwing money at it. Quoting for work that will fail is not a way to stay busy in a town this size.",
+  },
+];
+
+const repair = category("10-repair").filter(
+  (p) => !p.key.includes("before") && !p.key.includes("after"),
+);
+const historic = category("06-historic");
+const commercial = category("07-commercial");
+---
+
+<ServicePage
+  slug="restoration-repair"
+  title="Masonry Restoration & Repair | Lake Geneva, WI"
+  description="Cracked brick, failing column bases and historic facades brought back. See genuine before and after pairs from Lake Geneva area repair jobs."
+  h1="Masonry restoration and repair"
+  intro="Cracked brick, failing column bases, open joints and tired facades. Work that has to match what is already there, because everyone can see if it does not."
+  heroPhoto="07-commercial/historic-storefront-facade-restoration"
+  heroRatio="21/9"
+  heroPosition="center"
+  schemaDescription="Masonry restoration and repair including tuckpointing, brick matching, column base rebuilding and historic facade work in Lake Geneva, Wisconsin."
+  faq={faq}
+  testimonial="review-4"
+>
+  <div class="prose">
+    <h2>Repair is harder than building new</h2>
+    <p>
+      On a new wall you set the standard. On a repair, the standard is already
+      there in the wall next to you, laid by someone else, weathered for
+      decades. Matching it means matching the bond, the joint width, the mortar
+      colour and the tooling, and then letting it weather in. Get any of those
+      wrong and the patch announces itself forever.
+    </p>
+  </div>
+
+  <section class="ba-section">
+    <h2>Before and after</h2>
+    <div class="pairs">
+      <BeforeAfter
+        before="10-repair/brick-column-base-cracked-before"
+        after="10-repair/brick-column-base-repaired-after"
+        caption="A structural column base that had cracked and displaced, rebuilt with matched brick and a clean cast cap. The repair carries load again rather than just looking tidy."
+      />
+      <BeforeAfter
+        before="10-repair/brick-knee-wall-damage-before"
+        after="10-repair/brick-knee-wall-restored-after"
+        caption="Stepped cracking running the length of a knee wall, taken back and rebuilt straight, then repointed along its full run."
+      />
+      <BeforeAfter
+        before="09-hardscape/flagstone-patio-demolition-before"
+        after="09-hardscape/flagstone-patio-finished"
+        caption="The old patio broken out to the sub base and replaced with irregular flagstone, cut tight to the bay window and pointed."
+      />
+    </div>
+  </section>
+
+  <div class="prose spaced">
+    <h2>What Brent takes on</h2>
+    <ul>
+      <li>
+        <strong>Tuckpointing and repointing.</strong> Joints cut out properly
+        and refilled with mortar matched to the original, not whatever is in the
+        mixer.
+      </li>
+      <li>
+        <strong>Brick replacement.</strong> Failed units cut out and replaced,
+        matched as closely as what is available allows.
+      </li>
+      <li>
+        <strong>Column bases and piers.</strong> Rebuilt, with new caps cast in
+        custom formwork when the original is beyond saving.
+      </li>
+      <li>
+        <strong>Lintels, sills and arches.</strong> The places water gets in
+        first and does the most damage.
+      </li>
+      <li>
+        <strong>Historic facades.</strong> Cream brick, cut stone and the
+        carved detail that came with them.
+      </li>
+    </ul>
+
+    <h2>Historic and commercial work</h2>
+    <p>
+      Residential is the priority, but historic buildings and the occasional
+      commercial facade come up, and they are some of the most interesting work
+      there is. Churches, storefronts and anything with an arch turned over the
+      opening.
+    </p>
+  </div>
+
+  <section class="work">
+    <h2>Repairs and rebuilds</h2>
+    <Gallery photos={repair} columns={3} />
+  </section>
+
+  <section class="work">
+    <h2>Historic restoration</h2>
+    <Gallery photos={[...historic, ...commercial]} columns={3} />
+  </section>
+</ServicePage>
+
+<style>
+  .ba-section {
+    margin-block-start: var(--space-8);
+  }
+
+  .ba-section h2,
+  .work h2 {
+    margin-block-end: var(--space-6);
+  }
+
+  .pairs {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  .spaced {
+    margin-block-start: var(--space-8);
+  }
+
+  .work {
+    margin-block-start: var(--space-8);
+  }
+</style>

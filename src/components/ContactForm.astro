@@ -1,0 +1,271 @@
+---
+/**
+ * Contact form.
+ *
+ * A real form with a real action and method, so it works with JavaScript off.
+ * The fetch handler below is an enhancement, not a requirement.
+ */
+
+// PLACEHOLDER. Deliberately not a working number so it cannot quietly ship.
+// Replace with the real number before launch. See docs/HANDOFF.md step 2.
+const FALLBACK_PHONE = "(555) 555-5555";
+---
+
+<div class="form-wrap" data-form-wrap>
+  <form
+    class="form"
+    action="/api/contact"
+    method="POST"
+    data-contact-form
+    novalidate
+  >
+    <div class="field">
+      <label for="cf-name">Your name</label>
+      <input id="cf-name" name="name" type="text" autocomplete="name" required />
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="cf-email">Email</label>
+        <input
+          id="cf-email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          inputmode="email"
+          required
+        />
+      </div>
+
+      <div class="field">
+        <label for="cf-phone">
+          Phone <span class="optional">optional</span>
+        </label>
+        <input id="cf-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" />
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="cf-message">What are you looking to have built or repaired?</label>
+      <textarea id="cf-message" name="message" rows="6" required></textarea>
+      <p class="hint">
+        A rough location and a sentence or two about the job is plenty to start.
+      </p>
+    </div>
+
+    {
+      /* Honeypot. Positioned offscreen rather than display:none, because some
+         bots skip hidden inputs and would sail straight past the trap. */
+    }
+    <div class="hp" aria-hidden="true">
+      <label for="cf-company">Company</label>
+      <input
+        id="cf-company"
+        name="company"
+        type="text"
+        tabindex="-1"
+        autocomplete="off"
+      />
+    </div>
+
+    <p class="error" data-form-error hidden></p>
+
+    <button class="btn" type="submit" data-submit>Send message</button>
+
+    <p class="privacy">
+      Your details go straight to Dixon Masonry and are not shared with anyone.
+    </p>
+  </form>
+</div>
+
+<template data-success-template>
+  <div class="success">
+    <h2>Thanks, your message is on its way</h2>
+    <p>Brent typically replies within one business day.</p>
+  </div>
+</template>
+
+<style>
+  .form {
+    display: grid;
+    gap: var(--space-5);
+    max-width: 38rem;
+  }
+
+  .row {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 32em) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .field {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  label {
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .optional {
+    font-weight: 400;
+    color: var(--text-faint);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: 0.75rem 0.85rem;
+    min-height: 2.875rem;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    font-size: var(--text-base);
+  }
+
+  textarea {
+    resize: vertical;
+    line-height: var(--leading-normal);
+  }
+
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-color: var(--accent);
+  }
+
+  .hint,
+  .privacy {
+    font-size: var(--text-sm);
+    color: var(--text-faint);
+  }
+
+  .privacy {
+    margin-block-start: calc(var(--space-2) * -1);
+  }
+
+  /* Offscreen, not hidden. */
+  .hp {
+    position: absolute;
+    left: -9999px;
+    top: auto;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* No coloured alert box and no icon. The type carries it. */
+  .error {
+    margin: 0;
+    padding-inline-start: var(--space-4);
+    border-inline-start: 2px solid var(--accent);
+    color: var(--text);
+    font-size: var(--text-sm);
+    max-width: var(--measure);
+  }
+
+  .btn {
+    justify-self: start;
+  }
+
+  .success {
+    max-width: var(--measure);
+  }
+
+  .success h2 {
+    font-size: var(--text-2xl);
+  }
+
+  .success p {
+    margin-block-start: var(--space-4);
+    color: var(--text-muted);
+    font-size: var(--text-lg);
+  }
+</style>
+
+<script is:inline define:vars={{ FALLBACK_PHONE }}>
+  (function () {
+    const form = document.querySelector("[data-contact-form]");
+    if (!form) return;
+
+    const wrap = document.querySelector("[data-form-wrap]");
+    const button = form.querySelector("[data-submit]");
+    const errorEl = form.querySelector("[data-form-error]");
+    const template = document.querySelector("[data-success-template]");
+
+    const ERROR_TEXT =
+      "Something went wrong sending that. Please call or text us at " +
+      FALLBACK_PHONE +
+      " and we'll get right back to you.";
+
+    function showError(message) {
+      errorEl.textContent = message;
+      errorEl.hidden = false;
+    }
+
+    function clearError() {
+      errorEl.hidden = true;
+      errorEl.textContent = "";
+    }
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+      clearError();
+
+      // Let the browser point at the first bad field before we take over.
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const original = button.textContent;
+      button.disabled = true;
+      button.textContent = "Sending";
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          headers: { Accept: "application/json" },
+          body: new FormData(form),
+        });
+
+        let payload = null;
+        try {
+          payload = await response.json();
+        } catch (e) {
+          payload = null;
+        }
+
+        if (response.ok && payload && payload.ok === true) {
+          // Replace the form outright. Nothing left to resubmit.
+          wrap.replaceChildren(template.content.cloneNode(true));
+          wrap.querySelector("h2")?.setAttribute("tabindex", "-1");
+          wrap.querySelector("h2")?.focus();
+          return;
+        }
+
+        if (payload && payload.error === "validation") {
+          showError(
+            "Please check your name, email and message, then try sending again.",
+          );
+        } else {
+          showError(ERROR_TEXT);
+        }
+      } catch (e) {
+        showError(ERROR_TEXT);
+      }
+
+      // Every filled value is still here. Only the button goes back.
+      button.disabled = false;
+      button.textContent = original;
+    });
+  })();
+</script>

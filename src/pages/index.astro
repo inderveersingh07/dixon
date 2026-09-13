@@ -1,0 +1,334 @@
+---
+import Base from "../layouts/Base.astro";
+import Photo from "../components/Photo.astro";
+import Testimonials from "../components/Testimonials.astro";
+import CallToAction from "../components/CallToAction.astro";
+import { business, services } from "../config/business";
+import { photo } from "../lib/photos";
+
+const serviceImages: Record<string, string> = {
+  "stone-masonry": "03-stone-veneer/stone-veneer-feature-wall-finished",
+  "fireplaces-chimneys": "02-fireplaces/river-rock-fireplace-arched-opening",
+  "pizza-ovens": "05-brick-detail/brick-arch-window-head",
+  "restoration-repair": "10-repair/column-base-restored-limestone-cap",
+};
+
+const selected = [
+  "08-residential/fieldstone-home-exterior-bluestone-patio",
+  "04-chimneys/fieldstone-chimney-detail",
+  "09-hardscape/flagstone-patio-finished",
+  "06-historic/arched-brick-doorway-keystone",
+].map(photo);
+---
+
+<Base
+  title="Stone Masonry in Lake Geneva, WI | Dixon Masonry"
+  description="Stone masonry and stone artistry for Lake Geneva homes. Fireplaces, chimneys, pizza ovens and restoration, built by hand. Established 2001."
+  path="/"
+>
+  <!-- Split hero. The source photos are 4:3, so a full bleed banner would crop
+       the house out of frame. This keeps the whole subject and keeps the mobile
+       LCP image small. -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow">Lake Geneva, Wisconsin &middot; Established {business.foundedYear}</p>
+        <h1>Stone masonry for the homes around Lake Geneva</h1>
+        <p class="lead">
+          Fieldstone, river rock and natural stone, set by hand and fitted stone
+          by stone. Brent Dixon has been laying stone around this lake since
+          2001. Every project is personal here, not just another job on a list.
+        </p>
+        <div class="hero-actions">
+          <a class="btn" href="/contact/">Request a masonry quote</a>
+          <a class="btn btn-outline" href="/gallery/">See the stonework</a>
+        </div>
+      </div>
+
+      <div class="hero-media">
+        {/* Cropped to 3/4 from the top: keeps the mason, who gives the wall its
+            scale, and loses the scaffold plank and buckets underneath him. */}
+        <Photo
+          name="02-fireplaces/river-rock-chimney-breast-full-height"
+          sizes="(min-width: 64em) 48vw, 100vw"
+          ratio="3/4"
+          position="top"
+          priority={true}
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" id="services">
+    <div class="container">
+      <div class="section-head">
+        <h2>What Brent builds</h2>
+        <p class="lead">
+          Residential stonework is the heart of it. Commercial and historic work
+          comes up now and then, and the same standard applies to all of it.
+        </p>
+      </div>
+
+      <ul class="services">
+        {
+          services.map((s) => (
+            <li class="service">
+              <a href={`/${s.slug}/`} class="service-media">
+                <Photo
+                  name={serviceImages[s.slug]!}
+                  sizes="(min-width: 64em) 24vw, (min-width: 40em) 46vw, 100vw"
+                  widths={[320, 480, 720]}
+                  ratio="4/3"
+                />
+              </a>
+              <h3>
+                <a href={`/${s.slug}/`}>{s.title}</a>
+              </h3>
+              <p>{s.blurb}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Positioning -->
+  <section class="section craft">
+    <div class="container craft-inner">
+      <div class="craft-media">
+        <Photo
+          name="07-commercial/mason-hand-cut-brick"
+          sizes="(min-width: 64em) 40vw, 100vw"
+          ratio="4/3"
+        />
+      </div>
+      <div class="craft-copy prose">
+        <p class="eyebrow">Why people call Brent</p>
+        <h2>Stone artistry, not stone coverage</h2>
+        <p>
+          Plenty of outfits can cover a wall in stone. Fewer will stand back,
+          pull a stone out and cut another because the one in the wall breaks
+          the pattern. That is the difference you are paying for, and it is
+          visible for the next fifty years.
+        </p>
+        <p>
+          Brent works the job himself and brings on additional crew when the
+          scale calls for it. You deal with the person laying the stone, which
+          means nothing gets lost between the estimate and the wall.
+        </p>
+        <p>
+          <a href="/about/">Read more about Brent Dixon and how he works</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Selected work -->
+  <section class="section-tight work">
+    <div class="container">
+      <div class="section-head row">
+        <h2>Recent work</h2>
+        <a class="see-all" href="/gallery/">View the full stonework gallery</a>
+      </div>
+      <ul class="work-grid">
+        {
+          selected.map((p) => (
+            <li>
+              <Photo
+                name={p.key}
+                sizes="(min-width: 64em) 24vw, (min-width: 40em) 46vw, 100vw"
+                widths={[320, 480, 720]}
+                ratio="1/1"
+              />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section class="section-tight">
+    <div class="container">
+      <Testimonials
+        slugs={["review-1", "review-5"]}
+        heading="What customers say"
+      />
+    </div>
+  </section>
+
+  <!-- Service area -->
+  <section class="section-tight">
+    <div class="container">
+      <div class="area prose">
+        <h2>Working around the lake</h2>
+        <p>
+          Dixon Masonry covers Lake Geneva and the communities around the
+          shoreline, from Williams Bay and Fontana through to Lake Como and
+          Delavan. Brent does not travel into Illinois.
+        </p>
+        <p>
+          <a href="/lake-geneva-masonry/">See the full list of areas served</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <CallToAction />
+</Base>
+
+<style>
+  /* ---------- Hero ---------- */
+
+  .hero {
+    padding-block: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  }
+
+  .hero-inner {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  @media (min-width: 64em) {
+    .hero-inner {
+      grid-template-columns: 1fr 1.05fr;
+      gap: var(--space-8);
+    }
+  }
+
+  .hero-copy h1 {
+    margin-block: var(--space-4) var(--space-5);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block-start: var(--space-6);
+  }
+
+  /* ---------- Sections ---------- */
+
+  .section-head {
+    max-width: var(--measure);
+    margin-block-end: var(--space-7);
+  }
+
+  .section-head h2 + .lead {
+    margin-block-start: var(--space-4);
+  }
+
+  .section-head.row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-4);
+    max-width: none;
+  }
+
+  .see-all {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  /* ---------- Service cards ---------- */
+
+  .services {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-6) var(--space-5);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 40em) {
+    .services {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .services {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .service-media {
+    display: block;
+    margin-block-end: var(--space-4);
+    overflow: hidden;
+    border-radius: var(--radius);
+  }
+
+  .service-media :global(img) {
+    transition: scale 0.4s ease;
+  }
+
+  .service-media:hover :global(img) {
+    scale: 1.03;
+  }
+
+  .service h3 a {
+    text-decoration: none;
+  }
+
+  .service h3 a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .service p {
+    margin-block-start: var(--space-3);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+
+  /* ---------- Craft ---------- */
+
+  .craft {
+    background: var(--bg-subtle);
+    border-block: 1px solid var(--border);
+  }
+
+  .craft-inner {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  @media (min-width: 64em) {
+    .craft-inner {
+      grid-template-columns: 1fr 1.1fr;
+      gap: var(--space-8);
+    }
+  }
+
+  .craft-copy h2 {
+    margin-block: var(--space-3) 0;
+  }
+
+  /* ---------- Work grid ---------- */
+
+  .work-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (min-width: 64em) {
+    .work-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .area {
+    max-width: var(--measure);
+  }
+</style>

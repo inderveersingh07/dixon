@@ -1,0 +1,208 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import Gallery from "../components/Gallery.astro";
+import CallToAction from "../components/CallToAction.astro";
+import { category } from "../lib/photos";
+
+const crumbs = [{ name: "Gallery", path: "/gallery/" }];
+
+// Each group links into the service page it belongs to, so the gallery feeds
+// the money pages rather than being a dead end.
+const groups = [
+  {
+    id: "fireplaces",
+    title: "Fireplaces",
+    blurb:
+      "Chimney breasts, herringbone fireboxes, arched openings and mantel corbels.",
+    cats: ["02-fireplaces"],
+    service: { label: "stone fireplaces and chimneys", path: "/fireplaces-chimneys/" },
+  },
+  {
+    id: "chimneys",
+    title: "Chimneys",
+    blurb: "Fieldstone and river rock stacks, crowns and rooflines.",
+    cats: ["04-chimneys"],
+    service: { label: "chimney building and repair", path: "/fireplaces-chimneys/" },
+  },
+  {
+    id: "stone-veneer",
+    title: "Stone veneer and feature walls",
+    blurb: "Interior feature walls, from the mortar bed to the finished face.",
+    cats: ["03-stone-veneer"],
+    service: { label: "stone masonry and stone artistry", path: "/stone-masonry/" },
+  },
+  {
+    id: "exteriors",
+    title: "Exteriors and entries",
+    blurb: "Fieldstone elevations, window surrounds and bluestone terraces.",
+    cats: ["08-residential"],
+    service: { label: "stone masonry for exteriors", path: "/stone-masonry/" },
+  },
+  {
+    id: "hardscape",
+    title: "Patios and steps",
+    blurb: "Irregular flagstone, bluestone treads and brick entry steps.",
+    cats: ["09-hardscape"],
+    service: { label: "stonework around the house", path: "/stone-masonry/" },
+  },
+  {
+    id: "brick-detail",
+    title: "Brick detail",
+    blurb: "Arches, corbels and dentil courses. The work that takes the longest.",
+    cats: ["05-brick-detail"],
+    service: { label: "custom brickwork and pizza ovens", path: "/pizza-ovens/" },
+  },
+  {
+    id: "restoration",
+    title: "Restoration and repair",
+    blurb: "Column bases, knee walls and cast caps, before and after.",
+    cats: ["10-repair"],
+    service: { label: "masonry restoration and repair", path: "/restoration-repair/" },
+  },
+  {
+    id: "historic",
+    title: "Historic and commercial",
+    blurb: "Cream brick churches, storefront facades and rebuilt piers.",
+    cats: ["06-historic", "07-commercial"],
+    service: { label: "historic masonry restoration", path: "/restoration-repair/" },
+  },
+];
+
+const resolved = groups.map((g) => ({
+  ...g,
+  photos: g.cats.flatMap((c) => category(c)),
+}));
+
+const total = resolved.reduce((n, g) => n + g.photos.length, 0);
+---
+
+<Base
+  title="Stonework Gallery | Dixon Masonry, Lake Geneva"
+  description="Photographs of fireplaces, chimneys, stone veneer, patios and masonry repairs built by Dixon Masonry around Lake Geneva, Wisconsin."
+  path="/gallery/"
+  crumbs={crumbs}
+>
+  <div class="container">
+    <Breadcrumbs crumbs={crumbs} />
+  </div>
+
+  <header class="head container">
+    <h1>Stonework gallery</h1>
+    <p class="lead">
+      {total} photographs from jobs around Lake Geneva. Real work, photographed
+      on site rather than bought from a catalogue.
+    </p>
+  </header>
+
+  {/* Jump links. Each anchor gets its own URL and can rank on its own. */}
+  <nav class="toc container" aria-label="Jump to a section">
+    <h2 class="toc-title">On this page</h2>
+    <ul>
+      {
+        resolved.map((g) => (
+          <li>
+            <a href={`#${g.id}`}>
+              {g.title} <span class="count">{g.photos.length}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  {
+    resolved.map((g) => (
+      <section class="group container" id={g.id}>
+        <div class="group-head">
+          <h2>{g.title}</h2>
+          <p>{g.blurb}</p>
+          <p class="link">
+            More about <a href={g.service.path}>{g.service.label}</a>.
+          </p>
+        </div>
+        <Gallery photos={g.photos} columns={3} />
+      </section>
+    ))
+  }
+
+  <CallToAction
+    heading="Seen something close to what you had in mind?"
+    body="Tell Brent which photo caught your eye and roughly where the job is. That is usually enough to start."
+    primaryLabel="Request a masonry quote"
+  />
+</Base>
+
+<style>
+  .head {
+    padding-block: var(--space-6) var(--space-6);
+  }
+
+  .head .lead {
+    margin-block-start: var(--space-5);
+  }
+
+  .toc {
+    padding-block-end: var(--space-8);
+  }
+
+  .toc-title {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-block-end: var(--space-4);
+  }
+
+  .toc ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .toc a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .toc a:hover {
+    border-color: var(--border-strong);
+    color: var(--text);
+  }
+
+  .count {
+    color: var(--text-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .group {
+    padding-block-end: var(--section-y);
+    scroll-margin-top: 7rem;
+  }
+
+  .group-head {
+    max-width: var(--measure);
+    margin-block-end: var(--space-6);
+  }
+
+  .group-head p {
+    margin-block-start: var(--space-3);
+    color: var(--text-muted);
+  }
+
+  .group-head .link {
+    font-size: var(--text-sm);
+  }
+</style>

@@ -1,51 +1,80 @@
-# Dixon Masonry — curated website photos
+# Dixon Masonry
 
-60 images selected from 211 across the three source folders. Originals untouched.
+Marketing site for Dixon Masonry, a stone mason in Lake Geneva, Wisconsin.
+Astro, static output, deployed to Cloudflare Pages with one Pages Function for
+the contact form.
 
-- `website-photos/` — full resolution, EXIF-rotation corrected, metadata stripped, renamed.
-- `web-ready/` — same set resized to max 1920px, quality 82, progressive JPEG (~22 MB total). Use these on the site.
-- `MANIFEST.csv` — maps every new filename back to its original file.
+**Currently a staging build.** It is production quality but noindexed while it
+lives on the agency domain, and it carries a small number of deliberate
+placeholders. See [`docs/HANDOFF.md`](docs/HANDOFF.md) before launching.
 
-## Folders
+```bash
+npm install
+npm run dev          # localhost:4321. The contact form 404s here, see below.
+npm run build
+npm run prelaunch    # what is still outstanding before launch
+```
 
-| Folder | Count | Use on site |
-|---|---|---|
-| 01-hero | 4 | Homepage hero / banner — **see licensing note below** |
-| 02-fireplaces | 12 | Fireplaces & chimney breasts service page |
-| 03-stone-veneer | 4 | Stone veneer service page |
-| 04-chimneys | 5 | Chimney build & repair page |
-| 05-brick-detail | 6 | Craftsmanship / detail strip, texture backgrounds |
-| 06-historic | 3 | Historic restoration page |
-| 07-commercial | 9 | Commercial masonry page |
-| 08-residential | 4 | Residential page |
-| 09-hardscape | 4 | Patios, steps & hardscape page |
-| 10-repair | 8 | Restoration & repair page (before/after pairs) |
-| 11-team | 1 | About page |
+## Deploying
 
-## Before / after pairs
+Cloudflare Pages, connected to this repository.
 
-- `10-repair/brick-column-base-cracked-before.jpg` → `brick-column-base-repaired-after.jpg`
-- `10-repair/brick-knee-wall-damage-before.jpg` → `brick-knee-wall-restored-after.jpg`
-- `09-hardscape/flagstone-patio-demolition-before.jpg` → `flagstone-patio-finished.jpg`
+| Setting | Value |
+|---|---|
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Functions directory | `functions` (picked up automatically) |
 
-## Licensing note — read before publishing 01-hero
+Environment variables are set in the Pages dashboard, not in this repo. See
+HANDOFF steps 3 and 4.
 
-The four `01-hero` images and `02-fireplaces/river-rock-wood-mantel-corbel.jpg` came from files
-named `paddle-house-in-lake-geneva-wisconsin-lowell-custom-homes-*.jpg`. They are the best-looking
-photos in the collection (professionally shot finished interiors), but:
+## Testing the contact form locally
 
-1. They are only 480x640 / 640x480 — too small for a full-width hero. Upscaling will look soft.
-2. The filenames indicate they were saved from a third party's marketing (Lowell Custom Homes,
-   Lake Geneva WI), likely via Houzz. Even if Dixon did the masonry on that job, publishing the
-   photographer's images needs permission.
+The endpoint is a Cloudflare Pages Function, so the Astro dev server does not
+run it. Use Wrangler against a build:
 
-Get the high-resolution originals and written permission from the builder/photographer, or
-reshoot the space. Until then use `02-fireplaces/river-rock-chimney-breast-full-height.jpg` or
-`08-residential/fieldstone-home-exterior-bluestone-patio.jpg` as the hero.
+```bash
+npm run build
+npx wrangler pages dev dist --binding RESEND_API_KEY=your_key_here
+```
 
-## Also worth doing
+## Layout
 
-- No true wide-angle "finished exterior" shot exists for most jobs. Worth a return visit with a
-  camera to the church (`06-historic`) and the storefront (`07-commercial`) once complete.
-- `11-team/dixon-masonry-crew.jpg` is the only people shot in the whole collection. A few staged
-  crew/at-work photos would strengthen the About page a lot.
+```
+src/
+  config/business.ts     every business fact, single source of truth
+  config/site.ts         STAGING switch and canonical origin
+  lib/photos.ts          photo registry and alt text, enforced at build
+  lib/schema.ts          JSON-LD builders
+  components/            header, footer, gallery, form, FAQ, testimonials
+  layouts/               Base and ServicePage
+  pages/                 nine pages plus 404 and robots.txt
+  content/testimonials/  one markdown file per review
+  assets/photos/         56 photos, 1920px, by category
+  assets/logo/           light, dark and favicon source
+functions/api/contact.ts Resend-backed contact endpoint
+scripts/                 pre-launch gate
+docs/                    handoff guide, SEO plan, photo provenance
+```
+
+## Conventions worth knowing
+
+- **Business facts live in `src/config/business.ts`.** Nothing is hardcoded in
+  markup. Change the phone number there and it updates the header, footer,
+  contact page, tel: links and the structured data at once.
+- **Photos go through `src/lib/photos.ts`.** The build fails if a photo has no
+  alt text, or if the alt text runs over 125 characters. This is deliberate.
+- **No `Review` or `AggregateRating` schema.** Explained in HANDOFF.
+- **No web fonts.** Georgia plus the system UI stack, so no download, no flash
+  and no layout shift.
+- **`STAGING` in `src/config/site.ts` is the launch switch.** It drives the
+  robots meta tag, `robots.txt` and sitemap generation together.
+
+## Documentation
+
+- [`docs/HANDOFF.md`](docs/HANDOFF.md) launch checklist and how to repoint
+  everything at the client
+- [`docs/seo-plan.md`](docs/seo-plan.md) keyword map, metadata, technical fixes,
+  internal linking, schema, content plan, backlog and measurement
+- [`docs/photo-manifest.csv`](docs/photo-manifest.csv) maps every photo back to
+  its original file

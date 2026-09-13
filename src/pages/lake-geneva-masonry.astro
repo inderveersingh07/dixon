@@ -1,0 +1,319 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import Photo from "../components/Photo.astro";
+import FAQ from "../components/FAQ.astro";
+import Gallery from "../components/Gallery.astro";
+import CallToAction from "../components/CallToAction.astro";
+import { business, services } from "../config/business";
+import { faqPage } from "../lib/schema";
+import { category } from "../lib/photos";
+
+const crumbs = [{ name: "Service Area", path: "/lake-geneva-masonry/" }];
+
+// One page, genuinely written, rather than a thin page per town. Each entry
+// says something true and specific about working there.
+const areas = [
+  {
+    name: "Lake Geneva",
+    note: "Home base. Everything from lakefront new builds to repointing on the older brick housing off the main streets.",
+  },
+  {
+    name: "Williams Bay",
+    note: "A short run around the north shore. A lot of the older lake houses here have original stone that is worth repairing rather than replacing.",
+  },
+  {
+    name: "Fontana-on-Geneva Lake",
+    note: "West end of the lake. Larger lots, and more full height exterior stonework and outdoor living projects.",
+  },
+  {
+    name: "Lake Como",
+    note: "Just north of Lake Geneva. Mostly residential fireplaces, chimneys and hardscape.",
+  },
+  {
+    name: "Delavan",
+    note: "Regular work, both on the lake and in town.",
+  },
+  {
+    name: "Walworth",
+    note: "South of the lake, close enough for a same day look at a repair.",
+  },
+  {
+    name: "Linn",
+    note: "The south shore. Older lakefront properties with stone that predates most of the trade working on it.",
+  },
+  {
+    name: "Elkhorn",
+    note: "North west, and the furthest Brent regularly travels for residential work.",
+  },
+];
+
+const faq = [
+  {
+    q: "Do you work in Illinois?",
+    a: "No. Brent stays on the Wisconsin side. The lake communities keep him busy enough that travelling further would mean doing a worse job on what is already booked.",
+  },
+  {
+    q: "How far will you travel?",
+    a: "Roughly the ring of communities around Geneva Lake, out as far as Elkhorn and Delavan. If you are just outside that and the job is substantial, call and ask rather than assuming.",
+  },
+  {
+    q: "Do you charge for a quote?",
+    a: "No. Brent will come and look at the job and tell you what it involves. For anything small or straightforward, a couple of photos over email will often get you an answer faster.",
+  },
+  {
+    q: "How soon can you start?",
+    a: "It depends on the season and what is already booked. Exterior work clusters into the warmer months, so spring and summer fill up first. Interior fireplaces and feature walls can usually be fitted in sooner. Call and he will tell you honestly where you would sit in the queue.",
+  },
+];
+---
+
+<Base
+  title="Lake Geneva Masonry Contractor | Dixon Masonry"
+  description="A mason who works Lake Geneva and the lake homes around it, from Williams Bay to Fontana. Local, insured, established 2001. Call (262) 233-0392."
+  path="/lake-geneva-masonry/"
+  crumbs={crumbs}
+  schema={[faqPage(faq)]}
+>
+  <div class="container">
+    <Breadcrumbs crumbs={crumbs} />
+  </div>
+
+  <header class="head container">
+    <h1>Masonry for Lake Geneva and the lake communities</h1>
+    <p class="lead">
+      Dixon Masonry works the ring of towns around Geneva Lake. Local enough to
+      come and look at a repair the same week, and close enough to the work to
+      care how it ages.
+    </p>
+  </header>
+
+  <div class="container hero">
+    <Photo
+      name="08-residential/masonry-crew-lakefront-project"
+      sizes="(min-width: 76rem) 76rem, 100vw"
+      ratio="21/9"
+      position="center"
+      priority={true}
+    />
+  </div>
+
+  <section class="container section-tight">
+    <h2>Where Brent works</h2>
+    <ul class="areas">
+      {
+        areas.map((a) => (
+          <li>
+            <h3>{a.name}</h3>
+            <p>{a.note}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="not-il">
+      Dixon Masonry does not travel into Illinois.
+    </p>
+  </section>
+
+  <section class="container section-tight">
+    <div class="prose">
+      <h2>Why local matters on stonework</h2>
+      <p>
+        Stone around this lake is not generic. The glacial fieldstone that
+        comes out of Wisconsin ground has a particular colour range, and the
+        older lake houses were built with what was to hand at the time. A mason
+        who works here knows which blend will sit next to your existing wall
+        and which will look like a patch from the road.
+      </p>
+      <p>
+        Weather matters too. Freeze and thaw is what destroys masonry in this
+        climate, and it is the reason a crown cracks or a joint opens. Knowing
+        the failure pattern locally is most of knowing how to repair it so it
+        lasts.
+      </p>
+      <p>
+        Being nearby also means Brent can come back. A lot of this work is for
+        people he has already built for once.
+      </p>
+    </div>
+  </section>
+
+  <section class="container section-tight">
+    <h2>What he does around the lake</h2>
+    <ul class="services">
+      {
+        services.map((s) => (
+          <li>
+            <h3>
+              <a href={`/${s.slug}/`}>{s.title}</a>
+            </h3>
+            <p>{s.blurb}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="container section-tight">
+    <h2>Recent work around the lake</h2>
+    <Gallery photos={category("09-hardscape")} columns={3} />
+  </section>
+
+  <section class="container section-tight">
+    <FAQ items={faq} />
+  </section>
+
+  <section class="container section-tight">
+    <div class="nap-card">
+      <h2>Dixon Masonry</h2>
+      <address>
+        {business.address.street}<br />
+        {business.address.locality}, {business.address.region}
+      </address>
+      <p>
+        <a class="phone" href={`tel:${business.phone.e164}`}>
+          {business.phone.display}
+        </a>
+      </p>
+      <dl>
+        {
+          business.hours.display.map((h) => (
+            <div>
+              <dt>{h.label}</dt>
+              <dd>{h.value}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </section>
+
+  <CallToAction
+    heading="Working on a property around the lake?"
+    body="Tell Brent roughly where you are and what you are looking at. He will tell you whether it is something he takes on."
+    primaryLabel="Request a masonry quote"
+  />
+</Base>
+
+<style>
+  .head {
+    padding-block: var(--space-6) var(--space-6);
+  }
+
+  .head h1 {
+    max-width: 22ch;
+  }
+
+  .head .lead {
+    margin-block-start: var(--space-5);
+  }
+
+  .hero {
+    margin-block-end: var(--space-6);
+  }
+
+  section h2 {
+    margin-block-end: var(--space-6);
+  }
+
+  .areas,
+  .services {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 40em) {
+    .areas,
+    .services {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-6);
+    }
+  }
+
+  @media (min-width: 64em) {
+    .areas {
+      grid-template-columns: repeat(4, 1fr);
+    }
+    .services {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .areas h3,
+  .services h3 {
+    font-size: var(--text-lg);
+  }
+
+  .areas p,
+  .services p {
+    margin-block-start: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .services h3 a {
+    text-decoration: none;
+  }
+
+  .services h3 a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .not-il {
+    margin-block-start: var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--text-faint);
+  }
+
+  .nap-card {
+    padding: var(--space-6);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    max-width: 32rem;
+  }
+
+  .nap-card h2 {
+    font-size: var(--text-xl);
+    margin-block-end: var(--space-4);
+  }
+
+  .nap-card address {
+    font-style: normal;
+    color: var(--text-muted);
+  }
+
+  .phone {
+    display: inline-block;
+    margin-block-start: var(--space-3);
+    font-size: var(--text-xl);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .nap-card dl {
+    margin-block-start: var(--space-5);
+    display: grid;
+    gap: var(--space-2);
+    font-size: var(--text-sm);
+  }
+
+  .nap-card dl div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.5rem;
+  }
+
+  .nap-card dt {
+    font-weight: 600;
+  }
+
+  .nap-card dd {
+    margin: 0;
+    color: var(--text-muted);
+  }
+</style>

@@ -1,0 +1,211 @@
+---
+import Base from "../layouts/Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import Photo from "../components/Photo.astro";
+import Testimonials from "../components/Testimonials.astro";
+import CallToAction from "../components/CallToAction.astro";
+import { business } from "../config/business";
+import { person } from "../lib/schema";
+
+const crumbs = [{ name: "About", path: "/about/" }];
+const yearsInTrade = new Date().getFullYear() - business.foundedYear;
+---
+
+<Base
+  title="About Dixon Masonry | Mason in Lake Geneva, WI"
+  description="Brent Dixon has run Dixon Masonry in Lake Geneva since 2001. A family trade, carried on, with stone artistry and a standard that does not move."
+  path="/about/"
+  crumbs={crumbs}
+  schema={[person()]}
+>
+  <div class="container">
+    <Breadcrumbs crumbs={crumbs} />
+  </div>
+
+  <article>
+    <header class="head container">
+      <h1>The mason you will actually be dealing with</h1>
+      <p class="lead">
+        Dixon Masonry is {business.owner.fullName}. He has been in the trade
+        since {business.foundedYear}, which is {yearsInTrade} years of laying
+        stone around this lake.
+      </p>
+    </header>
+
+    <div class="container split">
+      <div class="prose">
+        <h2>A trade that was handed down</h2>
+        <p>
+          Masonry came to Brent through the family. That matters more than it
+          sounds, because the things that separate good stonework from average
+          stonework are not in a manual. They are judgement calls about which
+          face of a stone goes out, how wide a joint should read, when to stop
+          and recut. You learn those standing next to someone who already knows.
+        </p>
+
+        <h2>He works the job himself</h2>
+        <p>
+          Brent is on site doing the work. When a job is big enough to need
+          more hands he brings on additional crew, but he is the one laying
+          stone and the one you talk to. There is no estimator who hands you
+          off, and no crew arriving to build something they were not part of
+          quoting.
+        </p>
+        <p>
+          The practical upshot is that nothing gets lost in translation. What
+          you agreed is what gets built, because the same person did both.
+        </p>
+
+        <h2>Every project is personal</h2>
+        <p>
+          This is a small enough town that reputation is the only marketing
+          that works. Brent takes on work he can do properly and turns down
+          work he cannot, which is why he will sometimes tell you a repair is
+          not worth doing or that a job should wait until spring. It costs him
+          a booking and saves you money, and it is the reason people call back
+          years later.
+        </p>
+
+        <h2>Insured, local, and not going anywhere</h2>
+        <p>
+          Dixon Masonry is insured. Brent works Lake Geneva and the
+          communities around the lake, and does not travel into Illinois. If
+          you want to see work in person before committing, ask. There is a
+          good chance something is standing near you.
+        </p>
+        <p>
+          <a href="/lake-geneva-masonry/">See the full list of areas served</a>,
+          or <a href="/gallery/">look through the stonework gallery</a>.
+        </p>
+      </div>
+
+      <aside class="side">
+        <Photo
+          name="11-team/dixon-masonry-crew"
+          sizes="(min-width: 64em) 32vw, 100vw"
+          widths={[400, 640, 900]}
+        />
+        <p class="caption">
+          Brent with crew on a residential job. There is no studio headshot,
+          which feels about right for someone who is on a scaffold most days.
+        </p>
+
+        <dl class="facts">
+          <div>
+            <dt>Established</dt>
+            <dd>{business.foundedYear}</dd>
+          </div>
+          <div>
+            <dt>Based</dt>
+            <dd>{business.address.locality}, {business.address.region}</dd>
+          </div>
+          <div>
+            <dt>Specialism</dt>
+            <dd>Stone masonry and stone artistry</dd>
+          </div>
+          <div>
+            <dt>Insurance</dt>
+            <dd>Insured</dd>
+          </div>
+        </dl>
+
+        <Photo
+          name="07-commercial/mason-hand-cut-brick"
+          sizes="(min-width: 64em) 32vw, 100vw"
+          widths={[400, 640, 900]}
+        />
+      </aside>
+    </div>
+
+    <div class="container reviews">
+      <Testimonials
+        slugs={["review-3", "review-7"]}
+        heading="In customers' words"
+      />
+    </div>
+  </article>
+
+  <CallToAction
+    heading="Want to talk it through with Brent directly?"
+    body="No call centre and no sales visit. You describe the job, he tells you what it involves and what it is likely to cost."
+    primaryLabel="Send Brent a message"
+  />
+</Base>
+
+<style>
+  .head {
+    padding-block: var(--space-6) var(--space-7);
+  }
+
+  .head h1 {
+    max-width: 20ch;
+  }
+
+  .head .lead {
+    margin-block-start: var(--space-5);
+  }
+
+  .split {
+    display: grid;
+    gap: var(--space-8);
+    align-items: start;
+    padding-block-end: var(--section-y);
+  }
+
+  @media (min-width: 64em) {
+    .split {
+      grid-template-columns: 1.6fr 1fr;
+      gap: var(--space-9);
+    }
+  }
+
+  .side {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 64em) {
+    .side {
+      position: sticky;
+      top: 7rem;
+    }
+  }
+
+  .caption {
+    margin-block-start: calc(var(--space-3) * -1);
+    font-size: var(--text-sm);
+    color: var(--text-faint);
+  }
+
+  .facts {
+    margin: 0;
+    padding: var(--space-5);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .facts div {
+    display: grid;
+    gap: 0.15rem;
+  }
+
+  .facts dt {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .facts dd {
+    margin: 0;
+    font-size: var(--text-base);
+  }
+
+  .reviews {
+    padding-block-end: var(--section-y);
+  }
+</style>

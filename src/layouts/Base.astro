@@ -1,0 +1,102 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { STAGING, absoluteUrl } from "../config/site";
+import { business } from "../config/business";
+import { graph, localBusiness, website, breadcrumbs, type Crumb } from "../lib/schema";
+
+interface Props {
+  title: string;
+  description: string;
+  /** Site-relative path of this page, with leading and trailing slash. */
+  path: string;
+  /** Extra JSON-LD nodes for this page, merged into the @graph. */
+  schema?: object[];
+  /** Breadcrumb trail. Home is prepended automatically. Omit on the homepage. */
+  crumbs?: Crumb[];
+  /** Absolute or imported URL for the social share image. */
+  ogImage?: string;
+}
+
+const {
+  title,
+  description,
+  path,
+  schema = [],
+  crumbs,
+  ogImage = absoluteUrl("/og-default.jpg"),
+} = Astro.props;
+
+const canonical = absoluteUrl(path);
+
+const trail: Crumb[] | undefined = crumbs
+  ? [{ name: "Home", path: "/" }, ...crumbs]
+  : undefined;
+
+const jsonLd = graph([
+  localBusiness(),
+  website(),
+  ...(trail ? [breadcrumbs(trail)] : []),
+  ...schema,
+]);
+---
+
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    {
+      /* Staging lives on the agency domain. Indexing it here would hand the
+         client a duplicate content problem the day they move to their own. */
+      STAGING && <meta name="robots" content="noindex,nofollow" />
+    }
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={business.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/favicon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#faf8f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#141210" media="(prefers-color-scheme: dark)" />
+
+    <script is:inline>
+      // Stamp the saved theme before first paint so there is no flash and no
+      // layout shift. Wrapped because storage throws in some privacy contexts.
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme");
+          if (saved === "light" || saved === "dark") {
+            document.documentElement.dataset.theme = saved;
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

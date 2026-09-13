@@ -1,0 +1,61 @@
+---
+import Base from "../layouts/Base.astro";
+import { services } from "../config/business";
+---
+
+<Base
+  title="Page not found | Dixon Masonry"
+  description="That page does not exist. Here are the main pages on the Dixon Masonry site."
+  path="/404/"
+>
+  <section class="container wrap">
+    <p class="eyebrow">404</p>
+    <h1>That page is not here</h1>
+    <p class="lead">
+      The link may be out of date, or the address may have a typo in it. These
+      are the pages that do exist.
+    </p>
+
+    <ul class="links">
+      <li><a href="/">Home</a></li>
+      {
+        services.map((s) => (
+          <li>
+            <a href={`/${s.slug}/`}>{s.title}</a>
+          </li>
+        ))
+      }
+      <li><a href="/gallery/">Stonework gallery</a></li>
+      <li><a href="/about/">About Brent Dixon</a></li>
+      <li><a href="/lake-geneva-masonry/">Areas we serve</a></li>
+      <li><a href="/contact/">Contact</a></li>
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .wrap {
+    padding-block: var(--space-9);
+    max-width: var(--container-narrow);
+  }
+
+  h1 {
+    margin-block: var(--space-3) var(--space-5);
+  }
+
+  .links {
+    list-style: none;
+    margin-block-start: var(--space-7);
+    padding: 0;
+    display: grid;
+    gap: var(--space-3);
+    border-top: 1px solid var(--border);
+    padding-block-start: var(--space-5);
+  }
+
+  @media (min-width: 40em) {
+    .links {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+</style>

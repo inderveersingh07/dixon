@@ -1,0 +1,130 @@
+---
+// Light/dark toggle. The pre-paint script in Base.astro has already stamped
+// data-theme, so this only has to keep the button label in sync and persist
+// the choice.
+---
+
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  aria-pressed="false"
+  title="Switch between light and dark"
+>
+  <span class="visually-hidden" data-theme-label>Switch to dark theme</span>
+  <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+    <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.6"></circle>
+    <path
+      d="M12 2.6v2.6M12 18.8v2.6M2.6 12h2.6M18.8 12h2.6M5.3 5.3l1.9 1.9M16.8 16.8l1.9 1.9M18.7 5.3l-1.9 1.9M7.2 16.8l-1.9 1.9"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"></path>
+  </svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true" width="18" height="18">
+    <path
+      d="M20.1 14.6A8.4 8.4 0 0 1 9.4 3.9a8.4 8.4 0 1 0 10.7 10.7Z"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linejoin="round"></path>
+  </svg>
+</button>
+
+<style>
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: none;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .theme-toggle:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+
+  /* Show the icon for the theme you would switch TO. */
+  .icon-moon {
+    display: block;
+  }
+  .icon-sun {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .icon-moon {
+      display: none;
+    }
+    :root:not([data-theme="light"]) .icon-sun {
+      display: block;
+    }
+  }
+
+  :root[data-theme="dark"] .icon-moon {
+    display: none;
+  }
+  :root[data-theme="dark"] .icon-sun {
+    display: block;
+  }
+  :root[data-theme="light"] .icon-moon {
+    display: block;
+  }
+  :root[data-theme="light"] .icon-sun {
+    display: none;
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+
+  function currentTheme(): "light" | "dark" {
+    if (root.dataset.theme === "light" || root.dataset.theme === "dark") {
+      return root.dataset.theme;
+    }
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  }
+
+  function sync() {
+    const theme = currentTheme();
+    document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((btn) => {
+      btn.setAttribute("aria-pressed", String(theme === "dark"));
+      const label = btn.querySelector("[data-theme-label]");
+      if (label) {
+        label.textContent =
+          theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const next = currentTheme() === "dark" ? "light" : "dark";
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem("theme", next);
+      } catch {
+        /* storage unavailable, the choice just will not persist */
+      }
+      sync();
+    });
+  });
+
+  // Follow the OS while the visitor has not made an explicit choice.
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => {
+      if (!root.dataset.theme) sync();
+    });
+
+  sync();
+</script>

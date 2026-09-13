@@ -1,0 +1,105 @@
+---
+import ServicePage from "../layouts/ServicePage.astro";
+import Gallery from "../components/Gallery.astro";
+import { category } from "../lib/photos";
+
+const faq = [
+  {
+    q: "What is the difference between full stone and stone veneer?",
+    a: "Full stone is load bearing and sits on its own footing. Veneer is a facing, usually 25 to 40mm thick, tied back to the structure behind it. Both are real stone and both are laid by hand. Veneer costs less and puts less load on the building, which is why most interior feature walls and fireplace surrounds use it.",
+  },
+  {
+    q: "Can you match stone on an existing house?",
+    a: "Usually, yes. Bring Brent a photo and, if you have one, a loose stone. Glacial fieldstone and river rock vary a lot from quarry to quarry, so matching is about picking the right blend and then sorting on site rather than ordering one product off a sheet.",
+  },
+  {
+    q: "How long does a stone feature wall take?",
+    a: "A fireplace surround is typically a few days. A full height chimney breast to a vaulted ceiling is closer to two weeks once scaffolding, setting and pointing are counted. Brent will give you a realistic window when he sees the space.",
+  },
+  {
+    q: "Do you work in winter?",
+    a: "Interior stonework carries on through winter. Exterior work depends on temperature, because mortar needs to cure above freezing. Brent will tell you honestly whether a job should wait for spring rather than take your money and hope.",
+  },
+];
+
+const veneer = category("03-stone-veneer");
+const residential = category("08-residential");
+const detail = category("05-brick-detail");
+const gallery = [...veneer, ...residential, ...detail].filter(
+  (p) => p.key !== "03-stone-veneer/stone-veneer-feature-wall-finished",
+);
+---
+
+<ServicePage
+  slug="stone-masonry"
+  title="Stone Masonry & Stone Artistry | Lake Geneva WI"
+  description="Fieldstone, river rock and natural stone veneer built by hand for Lake Geneva homes. See finished walls, feature walls and exteriors, then request a quote."
+  h1="Stone masonry and stone artistry"
+  intro="Fieldstone, river rock and natural stone veneer, laid by hand for homes around Lake Geneva. This is the work Brent is known for and the reason most people call."
+  heroPhoto="03-stone-veneer/stone-veneer-feature-wall-finished"
+  heroRatio="16/9"
+  heroPosition="center"
+  schemaDescription="Natural stone masonry and stone veneer installation for residential properties in Lake Geneva, Wisconsin, including fieldstone, river rock and ledgestone."
+  faq={faq}
+  testimonial="review-2"
+>
+  <div class="prose">
+    <h2>Stone laid the way it should be</h2>
+    <p>
+      Stone is not a product you roll onto a wall. Every piece has a face, a
+      bed and a direction it wants to sit in, and a wall reads as right or
+      wrong depending on whether those decisions were made or defaulted to.
+      Brent sorts the pallet before he starts, keeps the joint widths honest,
+      and pulls a stone back out when it fights its neighbours.
+    </p>
+    <p>
+      That is slower than the alternative. It is also the reason the walls on
+      this page still look deliberate years after they went up.
+    </p>
+
+    <h2>What Brent works in</h2>
+    <ul>
+      <li>
+        <strong>Glacial fieldstone.</strong> The pink and grey granite that
+        comes out of Wisconsin ground. Heavy, irregular and the most
+        characteristic stone in this area.
+      </li>
+      <li>
+        <strong>River rock.</strong> Rounded cobbles, laid tight. Difficult to
+        do well because there are no flat faces to hide behind.
+      </li>
+      <li>
+        <strong>Ledgestone and cut veneer.</strong> Linear, dry stacked or
+        mortared, for interior feature walls and fireplace surrounds.
+      </li>
+      <li>
+        <strong>Cut limestone and bluestone.</strong> Sills, caps, treads and
+        hearths, cut to fit the opening rather than the other way round.
+      </li>
+    </ul>
+
+    <h2>Where it usually goes</h2>
+    <p>
+      Interior feature walls and fireplace surrounds are the most common
+      request, followed by exterior elevations, entry surrounds, pillars and
+      garden walls. If you are planning a
+      <a href="/fireplaces-chimneys/">fireplace or chimney</a> specifically,
+      that has its own page with more detail.
+    </p>
+  </div>
+
+  <section class="work">
+    <h2>Stonework Brent has built</h2>
+    <Gallery photos={gallery} columns={3} />
+  </section>
+</ServicePage>
+
+<style>
+  .work {
+    margin-block-start: var(--space-8);
+  }
+
+  .work h2 {
+    margin-block-end: var(--space-6);
+  }
+</style>

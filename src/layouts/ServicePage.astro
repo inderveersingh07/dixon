@@ -1,0 +1,200 @@
+---
+import Base from "./Base.astro";
+import Breadcrumbs from "../components/Breadcrumbs.astro";
+import Photo from "../components/Photo.astro";
+import FAQ from "../components/FAQ.astro";
+import Testimonials from "../components/Testimonials.astro";
+import CallToAction from "../components/CallToAction.astro";
+import { service, faqPage, type QA } from "../lib/schema";
+import { services } from "../config/business";
+
+interface Props {
+  slug: string;
+  title: string;
+  description: string;
+  h1: string;
+  intro: string;
+  heroPhoto: string;
+  heroRatio?: string;
+  heroPosition?: string;
+  /** Plain sentence describing the service, used in Service schema. */
+  schemaDescription: string;
+  faq: QA[];
+  /** Which testimonial file to show, if any. */
+  testimonial?: string;
+}
+
+const {
+  slug,
+  title,
+  description,
+  h1,
+  intro,
+  heroPhoto,
+  heroRatio = "16/9",
+  heroPosition = "center",
+  schemaDescription,
+  faq,
+  testimonial,
+} = Astro.props;
+
+const path = `/${slug}/`;
+const current = services.find((s) => s.slug === slug)!;
+const others = services.filter((s) => s.slug !== slug);
+---
+
+<Base
+  title={title}
+  description={description}
+  path={path}
+  crumbs={[{ name: current.title, path }]}
+  schema={[
+    service({ name: current.title, description: schemaDescription, path }),
+    faqPage(faq),
+  ]}
+>
+  <div class="container">
+    <Breadcrumbs crumbs={[{ name: current.title, path }]} />
+  </div>
+
+  <article>
+    <header class="head">
+      <div class="container">
+        <h1>{h1}</h1>
+        <p class="lead">{intro}</p>
+      </div>
+    </header>
+
+    <div class="container hero">
+      <Photo
+        name={heroPhoto}
+        sizes="(min-width: 76rem) 76rem, 100vw"
+        ratio={heroRatio}
+        position={heroPosition}
+        priority={true}
+      />
+    </div>
+
+    <div class="container body">
+      <slot />
+    </div>
+
+    <div class="container">
+      <div class="faq-wrap">
+        <FAQ items={faq} />
+      </div>
+    </div>
+
+    {
+      testimonial && (
+        <div class="container testimonial">
+          <Testimonials slugs={[testimonial]} columns={1} />
+        </div>
+      )
+    }
+
+    <div class="container">
+      <nav class="more" aria-label="Other services">
+        <h2 class="more-title">Other things Brent takes on</h2>
+        <ul>
+          {
+            others.map((s) => (
+              <li>
+                <a href={`/${s.slug}/`}>{s.title}</a>
+                <span class="more-blurb">{s.blurb}</span>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="area-link">
+          Working in <a href="/lake-geneva-masonry/">Lake Geneva and the
+          surrounding lake communities</a>.
+        </p>
+      </nav>
+    </div>
+  </article>
+
+  <CallToAction />
+</Base>
+
+<style>
+  .head {
+    padding-block: var(--space-6) var(--space-6);
+  }
+
+  .head h1 {
+    max-width: 18ch;
+  }
+
+  .head .lead {
+    margin-block-start: var(--space-5);
+  }
+
+  .hero {
+    margin-block-end: var(--section-y);
+  }
+
+  .body {
+    padding-block-end: var(--section-y);
+  }
+
+  .faq-wrap,
+  .testimonial {
+    padding-block-end: var(--section-y);
+  }
+
+  .more {
+    padding-block: var(--space-7);
+    border-top: 1px solid var(--border);
+  }
+
+  .more-title {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-block-end: var(--space-5);
+  }
+
+  .more ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  @media (min-width: 48em) {
+    .more ul {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-6);
+    }
+  }
+
+  .more li a {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    text-decoration: none;
+  }
+
+  .more li a:hover {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .more-blurb {
+    display: block;
+    margin-block-start: var(--space-2);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .area-link {
+    margin-block-start: var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+</style>

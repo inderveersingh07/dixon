@@ -1,0 +1,59 @@
+---
+import { Picture } from "astro:assets";
+import { photo } from "../lib/photos";
+
+interface Props {
+  /** Registry key, "<category>/<filename>". Unknown keys fail the build. */
+  name: string;
+  /** Sizes attribute. Default assumes a full width column on mobile. */
+  sizes?: string;
+  widths?: number[];
+  /** Set true only for the largest above-the-fold image on a page. */
+  priority?: boolean;
+  /** Fixed aspect ratio, e.g. "4/3". Omit to keep the photo's own ratio. */
+  ratio?: string;
+  /** Which part of the frame survives the crop when `ratio` is set. */
+  position?: string;
+  class?: string;
+}
+
+const {
+  name,
+  sizes = "(min-width: 64em) 50vw, 100vw",
+  widths = [400, 640, 900, 1280, 1920],
+  priority = false,
+  ratio,
+  position = "center",
+  class: className = "",
+} = Astro.props;
+
+const p = photo(name);
+
+// Never upscale past the source.
+const capped = widths.filter((w) => w <= p.src.width);
+if (capped.length === 0) capped.push(p.src.width);
+---
+
+<Picture
+  src={p.src}
+  alt={p.alt}
+  widths={capped}
+  sizes={sizes}
+  formats={["avif", "webp"]}
+  loading={priority ? "eager" : "lazy"}
+  decoding={priority ? "sync" : "async"}
+  fetchpriority={priority ? "high" : "auto"}
+  class={`photo ${className}`.trim()}
+  style={ratio
+    ? `aspect-ratio:${ratio};object-fit:cover;object-position:${position};`
+    : undefined}
+/>
+
+<style>
+  .photo {
+    width: 100%;
+    height: auto;
+    background: var(--bg-subtle);
+    border-radius: var(--radius);
+  }
+</style>

@@ -1,0 +1,130 @@
+---
+import ServicePage from "../layouts/ServicePage.astro";
+import Gallery from "../components/Gallery.astro";
+import { photo } from "../lib/photos";
+
+const faq = [
+  {
+    q: "How long does a wood fired pizza oven take to build?",
+    a: "Allow two to three weeks of elapsed time for a masonry oven. The build itself is shorter, but the dome and the hearth slab need curing time before the first fire, and rushing that is how ovens crack.",
+  },
+  {
+    q: "Does it need a foundation?",
+    a: "Yes. A masonry oven is heavy, and it needs a footing below frost depth or a properly engineered slab. This is the part people skip and regret. Brent will tell you what the base needs before anything else is agreed.",
+  },
+  {
+    q: "How do you cure a new oven?",
+    a: "Small fires, building slowly over about a week, so the moisture leaves the dome gradually. Brent will walk you through the schedule and leave it with you written down. A first fire that is too hot will crack a dome you just paid for.",
+  },
+  {
+    q: "Can the oven match the rest of the house?",
+    a: "That is usually the point. The dome is firebrick because it has to be, but the outer shell can be finished in the same stone as your house, chimney or patio so it looks like it belongs rather than like it arrived on a pallet.",
+  },
+];
+
+// There is no pizza oven photography yet. These are honest examples of the
+// same brickwork techniques an oven needs, labelled as such rather than
+// implied to be ovens. See docs/HANDOFF.md.
+const brickwork = [
+  "05-brick-detail/brick-arch-window-head",
+  "05-brick-detail/brick-arch-opening-interior",
+  "02-fireplaces/herringbone-firebrick-firebox",
+  "02-fireplaces/firebrick-firebox-corner-detail",
+  "05-brick-detail/brick-corbel-dentil-detail",
+  "09-hardscape/flagstone-patio-finished",
+].map(photo);
+---
+
+<ServicePage
+  slug="pizza-ovens"
+  title="Custom Outdoor Pizza Ovens | Lake Geneva Masonry"
+  description="Wood fired brick pizza ovens built to order for Lake Geneva patios and outdoor kitchens. Talk through your build with the mason who will lay it."
+  h1="Wood fired pizza ovens, built to order"
+  intro="A masonry oven is a brick dome, an arch and a flue, built to hold heat for hours. Brent builds them into patios and outdoor kitchens around Lake Geneva."
+  heroPhoto="05-brick-detail/brick-arch-window-head"
+  heroRatio="21/9"
+  heroPosition="center"
+  schemaDescription="Custom wood fired brick pizza ovens designed and built for residential patios and outdoor kitchens in Lake Geneva, Wisconsin."
+  faq={faq}
+>
+  <div class="prose">
+    <h2>What goes into a masonry oven</h2>
+    <p>
+      A wood fired oven is simple in principle and unforgiving in practice. Get
+      the dome geometry wrong and it will not draw. Get the insulation wrong and
+      it will not hold heat. Get the base wrong and the whole thing moves with
+      the first hard frost.
+    </p>
+
+    <ol>
+      <li>
+        <strong>The base.</strong> A footing below frost depth, or an
+        engineered slab. Everything above depends on this not moving.
+      </li>
+      <li>
+        <strong>The hearth.</strong> Firebrick over an insulating layer, so the
+        heat goes into your food rather than into the ground.
+      </li>
+      <li>
+        <strong>The dome.</strong> Firebrick laid to a curve, cut as it rises.
+        The shape is what pushes heat back down onto the stone.
+      </li>
+      <li>
+        <strong>The arch and flue.</strong> Sized to the door opening. Too big
+        and the heat leaves, too small and the smoke comes at you.
+      </li>
+      <li>
+        <strong>Insulation and shell.</strong> Blanket and render over the
+        dome, then the finish. This is where the oven starts matching the house.
+      </li>
+      <li>
+        <strong>Curing.</strong> A week of small fires. Not optional.
+      </li>
+    </ol>
+
+    <h2>Fitting it into what you already have</h2>
+    <p>
+      Most ovens are part of a larger outdoor project rather than a thing on
+      its own. If you are also looking at a patio, a counter or a surround,
+      it is far cheaper to build them together than to come back later and cut
+      into finished work. Brent will often suggest sequencing the
+      <a href="/stone-masonry/">stonework</a> and the oven as one job for that
+      reason.
+    </p>
+
+    <h2>Talk it through first</h2>
+    <p>
+      Oven size drives everything else, and the honest answer for most families
+      is smaller than they first think. A dome sized for six pizzas an hour
+      heats faster, burns less wood and costs less than one sized for a
+      restaurant. Call Brent and describe how you actually cook.
+    </p>
+  </div>
+
+  <section class="work">
+    <h2>Brickwork from other Dixon Masonry jobs</h2>
+    <p class="note">
+      An oven is arches, firebrick and cut work. These are those techniques on
+      fireplaces and buildings Brent has finished. Photographs of a completed
+      oven will be added here once a current build wraps up.
+    </p>
+    <Gallery photos={brickwork} columns={3} />
+  </section>
+</ServicePage>
+
+<style>
+  .work {
+    margin-block-start: var(--space-8);
+  }
+
+  .work h2 {
+    margin-block-end: var(--space-4);
+  }
+
+  .note {
+    max-width: var(--measure);
+    margin-block-end: var(--space-6);
+    color: var(--text-muted);
+    font-size: var(--text-sm);
+  }
+</style>

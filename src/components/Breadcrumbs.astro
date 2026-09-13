@@ -1,0 +1,74 @@
+---
+import type { Crumb } from "../lib/schema";
+
+interface Props {
+  /** Trail without Home, which is added here. Matches what Base.astro passes to schema. */
+  crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+const trail: Crumb[] = [{ name: "Home", path: "/" }, ...crumbs];
+---
+
+<nav class="crumbs" aria-label="Breadcrumb">
+  <ol>
+    {
+      trail.map((c, i) => {
+        const last = i === trail.length - 1;
+        return (
+          <li>
+            {last ? (
+              <span aria-current="page">{c.name}</span>
+            ) : (
+              <>
+                <a href={c.path}>{c.name}</a>
+                <span class="sep" aria-hidden="true">
+                  /
+                </span>
+              </>
+            )}
+          </li>
+        );
+      })
+    }
+  </ol>
+</nav>
+
+<style>
+  .crumbs {
+    padding-block: var(--space-5) 0;
+  }
+
+  ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--text-xs);
+    color: var(--text-faint);
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  a {
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  a:hover {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .sep {
+    color: var(--border-strong);
+  }
+</style>

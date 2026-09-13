@@ -1,0 +1,67 @@
+---
+import Photo from "./Photo.astro";
+import type { Photo as PhotoType } from "../lib/photos";
+
+interface Props {
+  photos: PhotoType[];
+  /** Column count at the widest breakpoint. */
+  columns?: 2 | 3;
+  sizes?: string;
+}
+
+const {
+  photos,
+  columns = 3,
+  sizes = "(min-width: 64em) 33vw, (min-width: 40em) 50vw, 100vw",
+} = Astro.props;
+---
+
+{
+  /* CSS columns rather than grid: the set is 42 landscape and 18 portrait, and
+     a fixed ratio grid would crop the portraits badly. Masonry flow keeps every
+     photo at its own shape. */
+}
+<div class={`gallery cols-${columns}`}>
+  {
+    photos.map((p, i) => (
+      <figure class="item">
+        {/* Three widths, not five. A gallery column never exceeds ~620px, and
+            every extra width multiplies across 56 photos and three formats,
+            which is what drives the Cloudflare build clock. */}
+        <Photo
+          name={p.key}
+          sizes={sizes}
+          widths={[360, 620, 960]}
+          priority={i === 0}
+        />
+      </figure>
+    ))
+  }
+</div>
+
+<style>
+  .gallery {
+    column-count: 1;
+    column-gap: var(--space-4);
+  }
+
+  .item {
+    margin: 0 0 var(--space-4);
+    break-inside: avoid;
+  }
+
+  @media (min-width: 40em) {
+    .gallery {
+      column-count: 2;
+    }
+  }
+
+  @media (min-width: 64em) {
+    .cols-3 {
+      column-count: 3;
+    }
+    .cols-2 {
+      column-count: 2;
+    }
+  }
+</style>

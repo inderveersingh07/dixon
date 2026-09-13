@@ -1,0 +1,105 @@
+---
+import { getCollection } from "astro:content";
+
+interface Props {
+  /** Which review files to show, by slug, in order. */
+  slugs: string[];
+  heading?: string;
+  columns?: 1 | 2;
+}
+
+const { slugs, heading, columns = 2 } = Astro.props;
+
+const all = await getCollection("testimonials");
+const byId = new Map(all.map((entry) => [entry.id, entry]));
+
+// Silently skip a slug that has been deleted, rather than failing the build.
+// Reviews come and go; a missing one should not take the site down.
+const items = slugs.map((s) => byId.get(s)).filter((e) => e !== undefined);
+---
+
+{
+  /* Displayed as ordinary content. No Review or AggregateRating markup:
+     reviews collected on a business's own site about itself are self-serving
+     under Google's policy, are not eligible for review rich results, and
+     marking them up risks a manual action. */
+}
+{
+  items.length > 0 && (
+    <section class="testimonials">
+      {heading && <h2 class="heading">{heading}</h2>}
+      <div class={`grid cols-${columns}`}>
+        {items.map((entry) => (
+          <figure class="quote">
+            <blockquote>
+              <p>{entry.data.quote}</p>
+            </blockquote>
+            <figcaption>
+              <span class="name">{entry.data.name}</span>
+              {entry.data.town && <span class="meta">{entry.data.town}</span>}
+              {entry.data.date && <span class="meta">{entry.data.date}</span>}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .heading {
+    margin-block-end: var(--space-6);
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 48em) {
+    .cols-2 {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-7);
+    }
+  }
+
+  .quote {
+    margin: 0;
+    padding-inline-start: var(--space-5);
+    border-inline-start: 2px solid var(--accent);
+  }
+
+  blockquote {
+    margin: 0;
+  }
+
+  blockquote p {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+    line-height: var(--leading-snug);
+    color: var(--text);
+  }
+
+  figcaption {
+    margin-block-start: var(--space-4);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.6rem;
+    font-size: var(--text-sm);
+  }
+
+  .name {
+    font-weight: 600;
+  }
+
+  .meta {
+    color: var(--text-faint);
+  }
+
+  .meta::before {
+    content: "";
+    margin-inline-end: 0.6rem;
+    border-left: 1px solid var(--border-strong);
+  }
+</style>

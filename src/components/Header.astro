@@ -1,0 +1,325 @@
+---
+import Logo from "./Logo.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+import { business, services } from "../config/business";
+
+const here = Astro.url.pathname;
+const isCurrent = (path: string) => here === path;
+const inServices = services.some((s) => here === `/${s.slug}/`);
+
+const links = [
+  { path: "/gallery/", label: "Gallery" },
+  { path: "/about/", label: "About" },
+  { path: "/lake-geneva-masonry/", label: "Service Area" },
+  { path: "/contact/", label: "Contact" },
+];
+---
+
+<header class="site-header">
+  <div class="container bar">
+    <a href="/" class="brand" aria-label={`${business.name}, home`}>
+      <Logo height={64} />
+    </a>
+
+    <button
+      type="button"
+      class="menu-btn"
+      data-menu-btn
+      aria-expanded="false"
+      aria-controls="site-nav"
+    >
+      <span class="visually-hidden">Menu</span>
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <path
+          d="M3.5 6.5h17M3.5 12h17M3.5 17.5h17"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+
+    <nav id="site-nav" class="nav" data-nav aria-label="Main">
+      <ul class="nav-list">
+        <li class="nav-services">
+          <details data-services>
+            <summary class:list={["nav-link", { current: inServices }]}>
+              Services
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                <path
+                  d="M6 9.5l6 6 6-6"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"></path>
+              </svg>
+            </summary>
+            <ul class="submenu">
+              {
+                services.map((s) => (
+                  <li>
+                    <a
+                      href={`/${s.slug}/`}
+                      class:list={["nav-link", { current: isCurrent(`/${s.slug}/`) }]}
+                      aria-current={isCurrent(`/${s.slug}/`) ? "page" : undefined}
+                    >
+                      {s.navLabel}
+                    </a>
+                  </li>
+                ))
+              }
+            </ul>
+          </details>
+        </li>
+
+        {
+          links.map((l) => (
+            <li>
+              <a
+                href={l.path}
+                class:list={["nav-link", { current: isCurrent(l.path) }]}
+                aria-current={isCurrent(l.path) ? "page" : undefined}
+              >
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+
+      <a class="btn call-btn" href={`tel:${business.phone.e164}`}>
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+          <path
+            d="M6.3 3.5h3l1.5 3.8-1.9 1.4a11.5 11.5 0 0 0 5.4 5.4l1.4-1.9 3.8 1.5v3a1.8 1.8 0 0 1-2 1.8A15.8 15.8 0 0 1 4.5 5.5a1.8 1.8 0 0 1 1.8-2Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linejoin="round"></path>
+        </svg>
+        {business.phone.display}
+      </a>
+    </nav>
+
+    <div class="toggle-slot"><ThemeToggle /></div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .bar {
+    display: flex;
+    align-items: center;
+    /* Wrap is what lets the mobile panel (flex-basis:100%) drop onto its own
+       row below the logo instead of squeezing in beside it. */
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    min-height: 5.75rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    margin-inline-end: auto;
+  }
+
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.6rem 0;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--text);
+  }
+
+  .nav-link.current {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  summary.nav-link {
+    list-style: none;
+  }
+  summary.nav-link::-webkit-details-marker {
+    display: none;
+  }
+
+  details[open] > summary.nav-link svg {
+    transform: rotate(180deg);
+  }
+
+  summary.nav-link svg {
+    transition: transform 0.15s ease;
+  }
+
+  .submenu {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .toggle-slot {
+    order: 3;
+    flex: none;
+  }
+
+  .menu-btn {
+    order: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: none;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  /* ---------- Mobile ---------- */
+
+  @media (max-width: 63.999em) {
+    .nav {
+      order: 4;
+      flex-basis: 100%;
+      display: none;
+      padding-block: var(--space-3) var(--space-5);
+      border-top: 1px solid var(--border);
+    }
+
+    .nav[data-open] {
+      display: block;
+    }
+
+    .nav-list > li + li,
+    .nav-services {
+      border-top: 1px solid var(--border);
+    }
+
+    .nav-link {
+      padding: 0.85rem 0;
+      font-size: var(--text-base);
+      min-height: 2.75rem;
+    }
+
+    .submenu {
+      padding-block-end: var(--space-2);
+      padding-inline-start: var(--space-4);
+      border-inline-start: 2px solid var(--border);
+      margin-inline-start: 0.2rem;
+    }
+
+    .submenu .nav-link {
+      padding-block: 0.7rem;
+      font-size: var(--text-sm);
+    }
+
+    .call-btn {
+      width: 100%;
+      margin-block-start: var(--space-4);
+    }
+  }
+
+  /* ---------- Desktop ---------- */
+
+  @media (min-width: 64em) {
+    .menu-btn {
+      display: none;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+    }
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      gap: var(--space-5);
+    }
+
+    .nav-services {
+      position: relative;
+    }
+
+    .submenu {
+      position: absolute;
+      top: calc(100% + 0.65rem);
+      left: 50%;
+      translate: -50% 0;
+      min-width: 15rem;
+      padding: var(--space-2);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow);
+    }
+
+    .submenu .nav-link {
+      padding: 0.6rem 0.75rem;
+      border-radius: var(--radius);
+    }
+
+    .submenu .nav-link:hover {
+      background: var(--bg-subtle);
+    }
+  }
+</style>
+
+<script>
+  // Mobile menu
+  const btn = document.querySelector<HTMLButtonElement>("[data-menu-btn]");
+  const nav = document.querySelector<HTMLElement>("[data-nav]");
+
+  btn?.addEventListener("click", () => {
+    const open = nav?.hasAttribute("data-open");
+    if (open) {
+      nav?.removeAttribute("data-open");
+    } else {
+      nav?.setAttribute("data-open", "");
+    }
+    btn.setAttribute("aria-expanded", String(!open));
+  });
+
+  // Desktop services dropdown: close on outside click and on Escape.
+  const details = document.querySelector<HTMLDetailsElement>("[data-services]");
+
+  document.addEventListener("click", (e) => {
+    if (!details?.open) return;
+    if (!details.contains(e.target as Node)) details.open = false;
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "Escape") return;
+    if (details?.open) {
+      details.open = false;
+      details.querySelector("summary")?.focus();
+    }
+  });
+</script>

@@ -1,0 +1,63 @@
+---
+import Photo from "./Photo.astro";
+
+interface Props {
+  before: string;
+  after: string;
+  caption: string;
+}
+
+const { before, after, caption } = Astro.props;
+---
+
+{
+  /* Two labelled photos side by side. No slider: a drag handle hides half the
+     evidence at any moment and does not work without JavaScript. */
+}
+<figure class="ba">
+  <div class="pair">
+    <div class="side">
+      <p class="label">Before</p>
+      <Photo name={before} sizes="(min-width: 48em) 45vw, 100vw" ratio="4/3" />
+    </div>
+    <div class="side">
+      <p class="label">After</p>
+      <Photo name={after} sizes="(min-width: 48em) 45vw, 100vw" ratio="4/3" />
+    </div>
+  </div>
+  <figcaption>{caption}</figcaption>
+</figure>
+
+<style>
+  .ba {
+    margin: 0;
+  }
+
+  .pair {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 48em) {
+    .pair {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-block-end: var(--space-2);
+  }
+
+  figcaption {
+    margin-block-start: var(--space-4);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    max-width: var(--measure);
+  }
+</style>

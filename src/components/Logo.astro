@@ -1,0 +1,76 @@
+---
+import { Image } from "astro:assets";
+import logoLight from "../assets/logo/logo-light.png";
+import logoDark from "../assets/logo/logo-dark.png";
+import { business } from "../config/business";
+
+interface Props {
+  /** Rendered height in px. Width follows the 3:2 lockup. */
+  height?: number;
+  class?: string;
+}
+
+const { height = 56, class: className = "" } = Astro.props;
+const width = Math.round((height * 1536) / 1024);
+---
+
+<span class={`logo ${className}`.trim()}>
+  <Image
+    src={logoLight}
+    alt={`${business.name} logo`}
+    width={width}
+    height={height}
+    densities={[1, 2]}
+    loading="eager"
+    class="logo-light"
+  />
+  <Image
+    src={logoDark}
+    alt=""
+    aria-hidden="true"
+    width={width}
+    height={height}
+    densities={[1, 2]}
+    loading="eager"
+    class="logo-dark"
+  />
+</span>
+
+<style>
+  .logo {
+    display: block;
+    flex: none;
+  }
+
+  .logo :global(img) {
+    height: auto;
+    width: auto;
+    max-height: 100%;
+  }
+
+  .logo :global(.logo-dark) {
+    display: none;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .logo :global(.logo-light) {
+      display: none;
+    }
+    :root:not([data-theme="light"]) .logo :global(.logo-dark) {
+      display: block;
+    }
+  }
+
+  :root[data-theme="dark"] .logo :global(.logo-light) {
+    display: none;
+  }
+  :root[data-theme="dark"] .logo :global(.logo-dark) {
+    display: block;
+  }
+  :root[data-theme="light"] .logo :global(.logo-light) {
+    display: block;
+  }
+  :root[data-theme="light"] .logo :global(.logo-dark) {
+    display: none;
+  }
+</style>

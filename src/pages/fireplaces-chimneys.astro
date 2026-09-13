@@ -1,0 +1,108 @@
+---
+import ServicePage from "../layouts/ServicePage.astro";
+import Gallery from "../components/Gallery.astro";
+import { category } from "../lib/photos";
+
+const faq = [
+  {
+    q: "Can you build a fireplace that runs the full height of a vaulted room?",
+    a: "Yes. A full height chimney breast is one of the most common requests, and several on this page run two storeys to the peak. It needs scaffolding and a structure that can carry the weight, which is worth checking before the design is finalised.",
+  },
+  {
+    q: "What is a herringbone firebox and why does it cost more?",
+    a: "It is firebrick laid at 45 degrees in an interlocking pattern rather than in straight courses. Every brick at the edges has to be cut to fit, so it takes far longer than a running bond. It reflects heat well and it is the detail people notice when they look into the fire.",
+  },
+  {
+    q: "My chimney is cracked at the crown. Can that be repaired?",
+    a: "Usually. A failing crown is the most common cause of water getting into a chimney, and it can normally be cut out and recast without rebuilding the stack. If the damage has been going on for years the brickwork underneath may need rebuilding too. Brent will tell you which it is.",
+  },
+  {
+    q: "Do you sweep chimneys or install liners?",
+    a: "No. Brent builds and repairs the masonry. Sweeping and liner installation are separate trades, and he would rather point you at someone who does that properly than take it on himself.",
+  },
+];
+
+const fireplaces = category("02-fireplaces").filter(
+  (p) => p.key !== "02-fireplaces/river-rock-chimney-breast-full-height",
+);
+const chimneys = category("04-chimneys");
+---
+
+<ServicePage
+  slug="fireplaces-chimneys"
+  title="Stone Fireplaces & Chimneys | Lake Geneva, WI"
+  description="Full height river rock fireplaces, herringbone fireboxes and fieldstone chimneys built and repaired around Lake Geneva. See the work and get a quote."
+  h1="Stone fireplaces and chimneys"
+  intro="Full height chimney breasts, herringbone fireboxes and fieldstone stacks, built new or brought back from years of weather."
+  heroPhoto="02-fireplaces/river-rock-chimney-breast-full-height"
+  heroRatio="21/9"
+  heroPosition="center"
+  schemaDescription="Design and construction of natural stone fireplaces, chimney breasts and chimneys, plus chimney repair and rebuilding, in Lake Geneva, Wisconsin."
+  faq={faq}
+  testimonial="review-4"
+>
+  <div class="prose">
+    <h2>The fireplace is the room</h2>
+    <p>
+      In most houses around this lake the fireplace is the thing people look at
+      first and remember afterwards. It is also the hardest stonework to get
+      right, because it is seen from a sofa two metres away in good light,
+      every day, for decades. There is nowhere to hide a lazy joint.
+    </p>
+
+    <h3>Chimney breasts</h3>
+    <p>
+      A full height breast to a vaulted ceiling is the most demanding version
+      of this work. The stone has to stay coherent as the wall narrows into the
+      gable, the weight has to be carried properly, and the pattern has to read
+      from the floor rather than just up close.
+    </p>
+
+    <h3>Fireboxes</h3>
+    <p>
+      Firebrick laid in herringbone, with every edge brick cut to fit. It takes
+      the longest and it is the part you look straight into.
+    </p>
+
+    <h3>Arches, mantels and corbels</h3>
+    <p>
+      Turned arches over the opening, stone corbels carrying a timber mantel,
+      cut hearths. The details that make a fireplace look built rather than
+      bought.
+    </p>
+
+    <h2>Chimney repair</h2>
+    <p>
+      Water is what kills a chimney. It gets in through a cracked crown or open
+      joints, freezes, and pushes the masonry apart from the inside. Caught
+      early it is a crown recast and some repointing. Left for a decade it
+      becomes a rebuild. If you can see daylight in a joint or crumbling mortar
+      on the roof, it is worth a look now.
+    </p>
+    <p>
+      Brent also handles broader
+      <a href="/restoration-repair/">masonry restoration and repair</a> on
+      walls, piers and column bases.
+    </p>
+  </div>
+
+  <section class="work">
+    <h2>Fireplaces</h2>
+    <Gallery photos={fireplaces} columns={3} />
+  </section>
+
+  <section class="work">
+    <h2>Chimneys</h2>
+    <Gallery photos={chimneys} columns={3} />
+  </section>
+</ServicePage>
+
+<style>
+  .work {
+    margin-block-start: var(--space-8);
+  }
+
+  .work h2 {
+    margin-block-end: var(--space-6);
+  }
+</style>

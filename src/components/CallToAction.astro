@@ -1,0 +1,72 @@
+---
+import { business } from "../config/business";
+
+interface Props {
+  heading?: string;
+  body?: string;
+  /** Descriptive anchor for the primary link. Never "click here". */
+  primaryLabel?: string;
+}
+
+const {
+  heading = "Thinking about a stone project?",
+  body = "Tell Brent what you have in mind. A rough location and a sentence or two is enough to start the conversation.",
+  primaryLabel = "Request a masonry quote",
+} = Astro.props;
+---
+
+<section class="cta">
+  <div class="container">
+    <div class="inner">
+      <div class="copy">
+        <h2>{heading}</h2>
+        <p>{body}</p>
+      </div>
+      <div class="actions">
+        <a class="btn" href="/contact/">{primaryLabel}</a>
+        <a class="btn btn-outline" href={`tel:${business.phone.e164}`}>
+          Call {business.phone.display}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    padding-block: var(--section-y);
+    background: var(--bg-subtle);
+    border-block: 1px solid var(--border);
+  }
+
+  .inner {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+  }
+
+  @media (min-width: 60em) {
+    .inner {
+      grid-template-columns: 1.5fr 1fr;
+      gap: var(--space-8);
+    }
+  }
+
+  .copy p {
+    margin-block-start: var(--space-4);
+    color: var(--text-muted);
+    max-width: 46ch;
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  @media (min-width: 60em) {
+    .actions {
+      justify-content: flex-end;
+    }
+  }
+</style>
