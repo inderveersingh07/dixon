@@ -59,10 +59,6 @@ export function localBusiness() {
       opens: slot.opens,
       closes: slot.closes,
     })),
-    founder: {
-      "@type": "Person",
-      name: business.owner.fullName,
-    },
     logo: absoluteUrl("/favicon-512.png"),
     image: absoluteUrl("/og-default.jpg"),
   };
@@ -108,15 +104,6 @@ export function service(opts: {
     serviceType: opts.name,
     provider: { "@id": ORG_ID },
     areaServed: business.serviceArea.map((name) => ({ "@type": "City", name })),
-  };
-}
-
-export function person() {
-  return {
-    "@type": "Person",
-    name: business.owner.fullName,
-    jobTitle: business.owner.jobTitle,
-    worksFor: { "@id": ORG_ID },
   };
 }
 
