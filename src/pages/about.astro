@@ -5,7 +5,6 @@ import Photo from "../components/Photo.astro";
 import Testimonials from "../components/Testimonials.astro";
 import CallToAction from "../components/CallToAction.astro";
 import { business } from "../config/business";
-import { person } from "../lib/schema";
 
 const crumbs = [{ name: "About", path: "/about/" }];
 const yearsInTrade = new Date().getFullYear() - business.foundedYear;
@@ -13,10 +12,9 @@ const yearsInTrade = new Date().getFullYear() - business.foundedYear;
 
 <Base
   title="About Dixon Masonry | Mason in Lake Geneva, WI"
-  description="Brent Dixon has run Dixon Masonry in Lake Geneva since 2001. A family trade, carried on, with stone artistry and a standard that does not move."
+  description="Dixon Masonry has served Lake Geneva since 2001. A family trade, carried on, with stone artistry and a standard that does not move."
   path="/about/"
   crumbs={crumbs}
-  schema={[person()]}
 >
   <div class="container">
     <Breadcrumbs crumbs={crumbs} />
@@ -24,9 +22,9 @@ const yearsInTrade = new Date().getFullYear() - business.foundedYear;
 
   <article>
     <header class="head container">
-      <h1>The mason you will actually be dealing with</h1>
+      <h1>Local masonry, built on experience</h1>
       <p class="lead">
-        Dixon Masonry is {business.owner.fullName}. He has been in the trade
+        Dixon Masonry has been in the trade
         since {business.foundedYear}, which is {yearsInTrade} years of laying
         stone around this lake.
       </p>
@@ -36,18 +34,18 @@ const yearsInTrade = new Date().getFullYear() - business.foundedYear;
       <div class="prose">
         <h2>A trade that was handed down</h2>
         <p>
-          Masonry came to Brent through the family. That matters more than it
+          Dixon Masonry grew from a family masonry tradition. That matters more than it
           sounds, because the things that separate good stonework from average
           stonework are not in a manual. They are judgement calls about which
           face of a stone goes out, how wide a joint should read, when to stop
           and recut. You learn those standing next to someone who already knows.
         </p>
 
-        <h2>He works the job himself</h2>
+        <h2>Hands-on work, from quote to completion</h2>
         <p>
-          Brent is on site doing the work. When a job is big enough to need
-          more hands he brings on additional crew, but he is the one laying
-          stone and the one you talk to. There is no estimator who hands you
+          Dixon Masonry is on site doing the work, with additional crew when a
+          project needs more hands. You speak directly with the people laying
+          the stone. There is no estimator who hands you
           off, and no crew arriving to build something they were not part of
           quoting.
         </p>
@@ -59,16 +57,15 @@ const yearsInTrade = new Date().getFullYear() - business.foundedYear;
         <h2>Every project is personal</h2>
         <p>
           This is a small enough town that reputation is the only marketing
-          that works. Brent takes on work he can do properly and turns down
-          work he cannot, which is why he will sometimes tell you a repair is
-          not worth doing or that a job should wait until spring. It costs him
-          a booking and saves you money, and it is the reason people call back
+          that works. Dixon Masonry takes on work that can be done properly and turns down
+          work that cannot. Sometimes a repair is not worth doing or a job
+          should wait until spring. Honest advice saves you money, and it is the reason people call back
           years later.
         </p>
 
         <h2>Insured, local, and not going anywhere</h2>
         <p>
-          Dixon Masonry is insured. Brent works Lake Geneva and the
+          Dixon Masonry is insured and serves Lake Geneva and the
           communities around the lake, and does not travel into Illinois. If
           you want to see work in person before committing, ask. There is a
           good chance something is standing near you.
@@ -86,8 +83,7 @@ const yearsInTrade = new Date().getFullYear() - business.foundedYear;
           widths={[400, 640, 900]}
         />
         <p class="caption">
-          Brent with crew on a residential job. There is no studio headshot,
-          which feels about right for someone who is on a scaffold most days.
+          The Dixon Masonry crew on a residential job.
         </p>
 
         <dl class="facts">
@@ -126,9 +122,9 @@ const yearsInTrade = new Date().getFullYear() - business.foundedYear;
   </article>
 
   <CallToAction
-    heading="Want to talk it through with Brent directly?"
-    body="No call centre and no sales visit. You describe the job, he tells you what it involves and what it is likely to cost."
-    primaryLabel="Send Brent a message"
+    heading="Want to talk it through with Dixon Masonry directly?"
+    body="No call centre and no sales visit. You describe the job, Dixon Masonry explains what it involves and what it is likely to cost."
+    primaryLabel="Send Dixon Masonry a message"
   />
 </Base>
 

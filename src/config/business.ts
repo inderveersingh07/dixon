@@ -9,14 +9,6 @@
 export const business = {
   name: "Dixon Masonry",
   legalName: "Dixon Masonry",
-  owner: {
-    firstName: "Brent",
-    lastName: "Dixon",
-    get fullName() {
-      return `${this.firstName} ${this.lastName}`;
-    },
-    jobTitle: "Owner and Mason",
-  },
 
   foundedYear: 2001,
 
